@@ -100,13 +100,6 @@ int main()
          0.5f,-0.5f, 0.5f
     };
 
-    // Данные для проверки нормализации инта в glVertexAttribPointer
-    // static const GLint gVertexBufferData[] = {
-    //     -300000000, -200000000, 0,
-    //      400000000, -100000000, 0,
-    //      100000000,  300000000, 0
-    // };
-
     // Настройка VBO
     GLuint vertexBuffer;
     glGenBuffers(1, &vertexBuffer);
@@ -171,7 +164,6 @@ int main()
     glm::mat4 projectionMat4 = glm::perspective(glm::radians(45.0f), static_cast<float>(WIDTH) / static_cast<float>(HEIGHT), 0.1f, 100.0f);
 
     // Или для ортогональной камеры:
-    // glm::mat4 projectionMat4 = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 100.0f); // В мировых координатах
     // glm::mat4 projectionMat4 = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, 0.0f, 100.0f); // В мировых координатах
 
     //Матрица камеры
@@ -201,10 +193,8 @@ int main()
         glBindVertexArray(vertexArrayID);
 
         // Отправка матрицы текущему привязаному шейдеру в MVP
-        // glUniformMatrix4fv(mvpMatID, 1, GL_FALSE, &mvp[0][0]);
         glUniformMatrix4fv(mvpMatID, 1, GL_FALSE, glm::value_ptr(mvp)); // последний аргумент указатель на массив
 
-        // glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         // Первый буффер аттрибутов - вершины  
         glVertexAttribPointer(
@@ -217,7 +207,6 @@ int main()
         );
         glEnableVertexAttribArray(0);
 
-        // glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         // Второй буффер аттрибутов - цвета
         glVertexAttribPointer(
@@ -229,16 +218,6 @@ int main()
             nullptr // смещение того места где начинаются данные в буффере
         );
         glEnableVertexAttribArray(1);
-
-        // Проверка нормализации инта
-        // glVertexAttribPointer(
-        //     0, // значение для layout в шейдере
-        //     3, // размер аттрибута. В данном случае вершины, которая состоит из 3х координат
-        //     GL_INT, // тип координат вершин в частности и тип данных аттрибута в общем
-        //     GL_TRUE, // нужно ли нормализовать?
-        //     0, // шаг между атрибутами вершин 
-        //     nullptr // смещение того места где начинаются данные в буффере
-        // );
 
         glDrawArrays(GL_TRIANGLES, 0, 12*3); // начиная с вершины 0 нарисовать все 3 вершины которые образуют треугольник
         glDisableVertexAttribArray(0);

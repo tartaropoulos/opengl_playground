@@ -7,6 +7,4 @@ out vec3 color;
 void main()
 {
     color = fragmentColor;
-    // color = vec3(1.0, 0.0, 0.0);
-    // color = vec3(gl_FragCoord.xy, 0.1f);
 }
