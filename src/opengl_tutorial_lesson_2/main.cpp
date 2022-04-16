@@ -1,6 +1,8 @@
 // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 
 #include <iostream>
+#define FREEGLUT_STATIC
+#define GLEW_STATIC
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
