@@ -5,16 +5,10 @@ project(OpenglPlayground LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(THIRDPARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty")
-set(THIRDPARTY_LIB "${THIRDPARTY_DIR}/Lib")
-
-# Все аргументы для линковки
-set(ALL_LIBS
-  "${THIRDPARTY_LIB}/libglew32.a"
-  "${THIRDPARTY_LIB}/libglfw3.a"
-  "-lopengl32")
-
-include_directories("${THIRDPARTY_DIR}/Include")
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
 
 macro(subdirlist RESULT CURDIR)
   file(GLOB CHILDREN RELATIVE ${CURDIR} ${CURDIR}/*)

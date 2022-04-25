@@ -14,4 +14,10 @@ file(GLOB CURRENT_SHADERS "*.vert" "*.frag")
 file(COPY ${CURRENT_SHADERS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(${CURRENT_FOLDER_NAME} ${CURRENT_SRC})
-target_link_libraries(${CURRENT_FOLDER_NAME} ${ALL_LIBS})
+
+set(LIBS 
+    GLEW::GLEW
+    glfw
+    ${OPENGL_LIBRARIES})
+    
+target_link_libraries(${CURRENT_FOLDER_NAME} ${LIBS})
