@@ -1,0 +1,9 @@
+{
+    "name": "opengl-playground",
+    "version": "0.1",
+    "dependencies": [
+        "glm",
+        "glew",
+        "glfw3"
+    ]
+}
