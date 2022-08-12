@@ -9,8 +9,8 @@ file(COPY
 
 add_executable(${CURRENT_FOLDER_NAME} 
     main.cpp
-    shader.cpp
-    shader.h)
+    ../common/shader.cpp
+    ../common/shader.h)
 
 set(LIBS 
     GLEW::GLEW
