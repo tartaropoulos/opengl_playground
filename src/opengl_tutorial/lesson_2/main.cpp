@@ -5,7 +5,7 @@
 #include <GLFW\glfw3.h>
 #include <glm\glm.hpp>
 
-#include "shader.h"
+#include "../common/shader.h"
 
 int main()
 {

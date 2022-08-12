@@ -8,7 +8,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
-#include "shader.h"
+#include "../common/shader.h"
 
 int HEIGHT = 1024;
 int WIDTH  = 768;
