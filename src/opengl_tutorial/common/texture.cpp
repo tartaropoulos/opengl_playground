@@ -55,6 +55,12 @@ private:
 
 GLuint loadBMP_custom(std::filesystem::path texturePath)
 {
+    if ( texturePath.extension() != ".bmp")
+    {
+        std::cout << "Wrong extension" << std::endl;
+        return 0;
+    }
+
     std::ifstream textureFile{texturePath};
 
     BMPHeader header;
