@@ -72,6 +72,17 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
         return 0;
     }
 
+    // Некоторые bmp файлы могут быть неверно отформатированы (написано в оригинале)
+    if ( header.imageSize == 0 )
+    {
+        header.imageSize = header.width * header.height * 3;
+    }
+
+    if ( header.dataPosition == 0 )
+    {
+        header.dataPosition = 54;
+    }
+
     std::istream_iterator<unsigned char> begin{textureFile};
     std::istream_iterator<unsigned char> end
     {
