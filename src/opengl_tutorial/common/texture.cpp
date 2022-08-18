@@ -1,20 +1,34 @@
 #include "texture.h"
 
+#include <array>
 #include <fstream>
-
-#include <GL/glew.h>
+#include <iostream>
+#include <tuple>
 
 struct BMPHeader
 {
-    std::uint32_t dataPosition;
-    std::uint32_t width;
-    std::uint32_t height;
-    std::uint32_t imageSize;
+    long long dataPosition;
+    long long width;
+    long long height;
+    long long imageSize;
+
+private:
+    enum class BMPHEADER_ADRESSES : int {
+        DATA_POSITION  = 0x0A,
+        WIDTH          = 0x12,
+        HEIGHT         = 0x16,
+        IMAGE_SIZE     = 0x22,
+        HEADER_END     = 0x36
+    };
+
+    static const std::string mc_BM;
+
+public:
 
     friend std::istream& operator>>(std::istream& is, BMPHeader& header)
     {
         std::string BM;
-        is.get(BM, 2);
+        is.read(&BM[0], 2);
 
         if (BM != mc_BM)
         {
@@ -22,36 +36,27 @@ struct BMPHeader
             return is;
         }
 
-        std::array< std::tuple< std::uint32_t&, BMPHEADER_ADRESSES > > valuesWithAdresses
+        std::array< std::tuple< long long&, BMPHEADER_ADRESSES >, 4 > valuesWithAdresses
         {
-            std::make_tuple(header.dataPosition, BMPHEADER_ADRESSES::DATA_POSITION),
-            std::make_tuple(header.width, BMPHEADER_ADRESSES::WIDTH),
-            std::make_tuple(header.height, BMPHEADER_ADRESSES::HEIGHT),
-            std::make_tuple(header.imageSize, BMPHEADER_ADRESSES::IMAGE_SIZE)
-        }
+            std::make_tuple(std::ref(header.dataPosition), BMPHEADER_ADRESSES::DATA_POSITION),
+            std::make_tuple(std::ref(header.width), BMPHEADER_ADRESSES::WIDTH),
+            std::make_tuple(std::ref(header.height), BMPHEADER_ADRESSES::HEIGHT),
+            std::make_tuple(std::ref(header.imageSize), BMPHEADER_ADRESSES::IMAGE_SIZE)
+        };
 
-        for (auto [auto& value, auto adress] : valuesWithAdresses)
+        for (auto& [value, adress] : valuesWithAdresses)
         {
-            is.seekg(adress);
+            is.seekg( static_cast<int>(adress) );
             is >> value;
         }
 
-        is.seekg(BMPHEADER_ADRESSES::HEADER_END);
+        is.seekg( static_cast<int>(BMPHEADER_ADRESSES::HEADER_END) );
 
         return is;
     }
-
-private:
-    enum class BMPHEADER_ADRESSES{
-        DATA_POSITION  = 0x0A,
-        WIDTH          = 0x12,
-        HEIGHT         = 0x16,
-        IMAGE_SIZE     = 0x22,
-        HEADER_END     = 0x36
-    }
-
-    static const std::string mc_BM{"BM"};
 };
+
+const std::string BMPHeader::mc_BM{"BM"};
 
 GLuint loadBMP_custom(std::filesystem::path texturePath)
 {
@@ -106,7 +111,7 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
     (
         GL_TEXTURE_2D, // цель
         0, // количевство LODов, 0 просто изображение
-        GL_RGB, // 
+        GL_RGB, // количество цветовых компонентов в текстуре
         header.width, // ширина изображения
         header.height, // высота изображения
         0, // всегда 0 (https://docs.gl/gl4/glTexImage2D)

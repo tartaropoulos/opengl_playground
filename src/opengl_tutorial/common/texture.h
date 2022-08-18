@@ -3,7 +3,7 @@
 
 #include <filesystem>
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 GLuint loadBMP_custom(const std::filesystem::path texturePath);
 
