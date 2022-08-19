@@ -7,13 +7,13 @@
 
 struct BMPHeader
 {
-    long long dataPosition;
-    long long width;
-    long long height;
-    long long imageSize;
+    uint32_t dataPosition;
+    uint32_t width;
+    uint32_t height;
+    uint32_t imageSize;
 
 private:
-    enum class BMPHEADER_ADRESSES : int {
+    enum class BMPHEADER_ADRESSES : int8_t {
         DATA_POSITION  = 0x0A,
         WIDTH          = 0x12,
         HEIGHT         = 0x16,
@@ -27,7 +27,7 @@ public:
 
     friend std::istream& operator>>(std::istream& is, BMPHeader& header)
     {
-        std::string BM;
+        std::string BM{2, ' '};
         is.read(&BM[0], 2);
 
         if (BM != mc_BM)
@@ -36,7 +36,7 @@ public:
             return is;
         }
 
-        std::array< std::tuple< long long&, BMPHEADER_ADRESSES >, 4 > valuesWithAdresses
+        std::array< std::tuple< uint32_t&, BMPHEADER_ADRESSES >, 4 > valuesWithAdresses
         {
             std::make_tuple(std::ref(header.dataPosition), BMPHEADER_ADRESSES::DATA_POSITION),
             std::make_tuple(std::ref(header.width), BMPHEADER_ADRESSES::WIDTH),
@@ -46,11 +46,11 @@ public:
 
         for (auto& [value, adress] : valuesWithAdresses)
         {
-            is.seekg( static_cast<int>(adress) );
-            is >> value;
+            is.seekg( static_cast<long long>(adress), is.beg );
+            is.read( reinterpret_cast<char*>(&value), 4 );
         }
 
-        is.seekg( static_cast<int>(BMPHEADER_ADRESSES::HEADER_END) );
+        is.seekg( static_cast<long long>(BMPHEADER_ADRESSES::HEADER_END) );
 
         return is;
     }
@@ -66,7 +66,7 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
         return 0;
     }
 
-    std::ifstream textureFile{texturePath};
+    std::ifstream textureFile{texturePath, std::ios::binary};
 
     BMPHeader header;
     textureFile >> header;
@@ -88,16 +88,8 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
         header.dataPosition = 54;
     }
 
-    std::istream_iterator<unsigned char> begin{textureFile};
-    std::istream_iterator<unsigned char> end
-    {
-        textureFile.seekg
-        (
-            textureFile.tellg() + header.imageSize
-        )
-    };
-
-    std::vector data(begin, end);
+    std::vector<std::uint8_t> data(header.imageSize, 0);
+    textureFile.read(reinterpret_cast<char*>( data.data() ), header.imageSize);
 
     textureFile.close();
 
@@ -117,7 +109,7 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
         0, // всегда 0 (https://docs.gl/gl4/glTexImage2D)
         GL_BGR, // формат данных пикселя
         GL_UNSIGNED_BYTE, // тип данных пикселя
-        data.data() // указатель на данные
+        reinterpret_cast<void*>( data.data() ) // указатель на данные
     );
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
