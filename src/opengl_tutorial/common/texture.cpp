@@ -112,8 +112,17 @@ GLuint loadBMP_custom(std::filesystem::path texturePath)
         reinterpret_cast<void*>( data.data() ) // указатель на данные
     );
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // Включение повтора текстуры по координатам s(x) и t(y)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    // При увеличении текстуры используется линейная фильтрация
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // При уменьшении текстуры используется смешение двух ближайших мипмап
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+    // Генерация мипмап
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     return textureID;
 }
