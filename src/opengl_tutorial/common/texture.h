@@ -7,4 +7,6 @@
 
 GLuint loadBMP_custom(const std::filesystem::path texturePath);
 
+GLuint loadDDS(std::filesystem::path texturePath);
+
 #endif // TEXTURE_H

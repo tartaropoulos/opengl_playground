@@ -183,8 +183,9 @@ int main()
     // Получение id для матрицы MVP в шейдерной программе
     GLuint mvpMatID = glGetUniformLocation(programID, "MVP");
 
-     // Загрузка текстуры
-    GLuint texture = loadBMP_custom("uvtemplate.bmp");
+    // Загрузка текстуры
+    // GLuint texture = loadBMP_custom("uvtemplate.bmp");
+    GLuint texture = loadDDS("uvtemplate.DDS");
 
     // Получение id для myTextureSampler
     GLuint textureID = glGetUniformLocation(programID, "myTextureSampler");
