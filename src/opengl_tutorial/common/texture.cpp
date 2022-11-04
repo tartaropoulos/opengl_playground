@@ -196,17 +196,17 @@ GLuint loadDDS(std::filesystem::path texturePath)
     textureFile.close();
 
     uint32_t format;
-    switch (header.fourCC)
+    switch ( static_cast<FOURCC>(header.fourCC) )
     {
-    case static_cast<uint32_t>(FOURCC::DXT1):
+    case FOURCC::DXT1:
         format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
         break;
 
-    case static_cast<uint32_t>(FOURCC::DXT3):
+    case FOURCC::DXT3:
         format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
         break;
 
-    case static_cast<uint32_t>(FOURCC::DXT5):
+    case FOURCC::DXT5:
         format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         break;
     
