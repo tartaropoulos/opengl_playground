@@ -137,11 +137,11 @@ struct DDSHeader
 
 private:
     enum class DDSHEADER_ADRESSES : int8_t {
-        HEIGHT         = 8,
-        WIDTH          = 12,
-        LINEAR_SIZE    = 16,
-        MIP_MAP_COUNT  = 24,
-        FOURCC         = 80,
+        HEIGHT         = 12,
+        WIDTH          = 16,
+        LINEAR_SIZE    = 20,
+        MIP_MAP_COUNT  = 28,
+        FOURCC         = 84,
         HEADER_END     = 124
     };
 
